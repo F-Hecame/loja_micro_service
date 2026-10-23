@@ -1,7 +1,7 @@
 import pytest
-import pedidos
-import manipulacaoArquivos
-import interface
+from app.cli import pedidos
+from app import manipulacaoArquivos
+from app.cli import interface
 from unittest.mock import ANY
 from datetime import datetime
 
@@ -13,7 +13,7 @@ def test_adicionar_pedido(mocker):
 
     """
 
-    mocker.patch('pedidos.listaPedido', [])
+    mocker.patch('app.cli.pedidos.listaPedido', [])
 
     # 2. Simulamos a resposta da API e dos ficheiros locais
     produtos_api_falsos = [
@@ -26,19 +26,19 @@ def test_adicionar_pedido(mocker):
     mock_response = mocker.Mock()
     mock_response.status_code = 200
     mock_response.json.return_value = produtos_api_falsos
-    mocker.patch('pedidos.requests.get', return_value=mock_response)
+    mocker.patch('app.cli.pedidos.requests.get', return_value=mock_response)
     
     # Mock para a leitura de ficheiro local
-    mocker.patch('manipulacaoArquivos.lerProdutosLocais', return_value=produtos_locais_falsos)
+    mocker.patch('app.manipulacaoArquivos.lerProdutosLocais', return_value=produtos_locais_falsos)
 
     # 3. Simulamos o input do utilizador a escolher o produto com ID 2
     mocker.patch('builtins.input', side_effect=['2'])
 
     # 4. Mocks para as funções de interface
-    mocker.patch('interface.limpar_tela')
-    mocker.patch('interface.mostrar_tabela_produtos')
-    mock_mensagem_sucesso = mocker.patch('interface.mensagem_sucesso')
-    mocker.patch('interface.pausar')
+    mocker.patch('app.cli.interface.limpar_tela')
+    mocker.patch('app.cli.interface.mostrar_tabela_produtos')
+    mock_mensagem_sucesso = mocker.patch('app.cli.interface.mensagem_sucesso')
+    mocker.patch('app.cli.interface.pausar')
 
     # --- ACT ---
     pedidos.adicionar_pedido()
@@ -65,23 +65,23 @@ def test_fechar_pedido(mocker):
         (2, 'Produto B', 20.50)
     ]
     # Forçar a variável global a ter este valor no início do teste.
-    mocker.patch('pedidos.listaPedido', pedido_falso_em_andamento)
+    mocker.patch('app.cli.pedidos.listaPedido', pedido_falso_em_andamento)
 
     # 2. Simular o input do utilizador para o nome e CPF.
     mocker.patch('builtins.input', side_effect=['Cliente Teste', '123.456.789-00'])
 
     # 3. Mockar a data e hora.
     timestamp_falso = datetime(2025, 8, 19, 17, 30, 0) 
-    mock_datetime = mocker.patch('pedidos.datetime') 
+    mock_datetime = mocker.patch('app.cli.pedidos.datetime') 
     mock_datetime.now.return_value = timestamp_falso 
 
     # 4. Preparamos o nosso espião para a função que grava no ficheiro.
-    mock_gravar = mocker.patch('manipulacaoArquivos.gravarPedidos')
+    mock_gravar = mocker.patch('app.manipulacaoArquivos.gravarPedidos')
 
     # 5. Mocks para as funções de interface.
-    mocker.patch('interface.limpar_tela')
-    mocker.patch('interface.mensagem_sucesso')
-    mocker.patch('interface.pausar')
+    mocker.patch('app.cli.interface.limpar_tela')
+    mocker.patch('app.cli.interface.mensagem_sucesso')
+    mocker.patch('app.cli.interface.pausar')
 
     # --- ACT (Executar a Ação) ---
     pedidos.fechar_pedido()
@@ -111,16 +111,16 @@ def test_remover_item_pedido(mocker):
         (1, 'Produto A', 10.0),
         (2, 'Produto B', 20.0)  # <-- Este será removido
     ]
-    mocker.patch('pedidos.listaPedido', pedido_falso_com_dois_itens)
+    mocker.patch('app.cli.pedidos.listaPedido', pedido_falso_com_dois_itens)
 
     # 2. Simula o input do utilizador.
     mocker.patch('builtins.input', return_value='2')
 
     # 3. Mocks para as funções de interface.
-    mocker.patch('interface.limpar_tela')
-    mocker.patch('interface.mostrar_tabela_pedidos')
-    mock_mensagem_sucesso = mocker.patch('interface.mensagem_sucesso')
-    mocker.patch('interface.pausar')
+    mocker.patch('app.cli.interface.limpar_tela')
+    mocker.patch('app.cli.interface.mostrar_tabela_pedidos')
+    mock_mensagem_sucesso = mocker.patch('app.cli.interface.mensagem_sucesso')
+    mocker.patch('app.cli.interface.pausar')
 
 
     # --- ACT (Executar a Ação) ---
@@ -154,15 +154,15 @@ def test_listar_pedido(mocker):
         (1, 'Produto A', 10.0),
         (2, 'Produto B', 20.0)
     ]
-    mocker.patch('pedidos.listaPedido', pedido_falso)
+    mocker.patch('app.cli.pedidos.listaPedido', pedido_falso)
 
     # 2. Preparar as duas funções de interface que podem ser chamadas.
     mock_mostrar_tabela = mocker.spy(interface, 'mostrar_tabela_pedidos')
-    mock_mensagem_alerta = mocker.patch('interface.mensagem_alerta')
+    mock_mensagem_alerta = mocker.patch('app.cli.interface.mensagem_alerta')
 
     # Mock para a função de pausa no final.
-    mocker.patch('interface.pausar')
-    mocker.patch('interface.limpar_tela')
+    mocker.patch('app.cli.interface.pausar')
+    mocker.patch('app.cli.interface.limpar_tela')
 
     # --- ACT ---
     pedidos.listar_pedidos()

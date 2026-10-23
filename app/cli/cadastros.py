@@ -1,6 +1,6 @@
 # cadastros.py
-import manipulacaoArquivos
-import interface
+from app import manipulacaoArquivos
+from app.cli import interface
 
 def cadastrar_item():
     interface.limpar_tela()

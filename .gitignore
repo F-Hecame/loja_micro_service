@@ -1,3 +1,6 @@
 .venv
 .pytest_cache
 __pycache__
+produtos_local.txt
+Pedidos.txt
+.env

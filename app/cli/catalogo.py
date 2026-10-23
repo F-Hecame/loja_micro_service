@@ -1,6 +1,6 @@
 import requests
-import manipulacaoArquivos
-import interface
+from app import manipulacaoArquivos
+from app.cli import interface
 
 def buscar_produtos_api():
     try:

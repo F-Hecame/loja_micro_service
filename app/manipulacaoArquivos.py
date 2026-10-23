@@ -37,3 +37,24 @@ def apagarArquivosTemporarios():
     for arquivo in ["produtos_local.txt", "Pedidos.txt"]:
         if os.path.exists(arquivo):
             os.remove(arquivo)
+
+
+def reescreverProdutosLocais(produtos):
+    with open("produtos_local.txt", "w") as f:
+        for p in produtos:
+            f.write(f"{p['id']};{p['title']};{p['price']};{p['description']}\n")
+
+def gravarLinhaPedido(datahora, lista_dict):
+    with open("Pedidos.txt", "a") as f:
+        f.write(f"{datahora};{json.dumps(lista_dict)}\n")
+
+def lerLinhasPedidos():
+    try:
+        with open("Pedidos.txt", "r") as f:
+            return [linha for linha in f.read().splitlines() if linha.strip()]
+    except FileNotFoundError:
+        return []
+
+def limparPedidos():
+    with open("Pedidos.txt", "w") as f:
+        f.truncate()

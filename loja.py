@@ -1,5 +1,5 @@
-import menu_principal
-import manipulacaoArquivos
+from app.cli import menu_principal
+from app import manipulacaoArquivos
 import atexit
 
 # Limpeza automática ao sair do programa

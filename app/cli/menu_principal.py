@@ -1,8 +1,8 @@
-import cadastros
-import pagamentos
-import catalogo
-import pedidos
-import interface
+from app.cli import cadastros
+from app.cli import pagamentos
+from app.cli import catalogo
+from app.cli import pedidos
+from app.cli import interface
 
 def exibir_menu_principal():
     while True:

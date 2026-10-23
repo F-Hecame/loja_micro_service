@@ -1,6 +1,6 @@
-import manipulacaoArquivos
+from app import manipulacaoArquivos
 import json
-import interface
+from app.cli import interface
 
 def realizar_pagamento():
     interface.limpar_tela()
